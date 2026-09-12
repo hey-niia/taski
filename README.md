@@ -52,7 +52,9 @@ rustup target add aarch64-apple-darwin x86_64-apple-darwin
 npm run tauri dev
 ```
 
-Requires macOS 26 (Tahoe) or later for the on-device icon-suggestion sidecar (Apple's Foundation Models framework); the rest of the app runs without it. Built with Tauri v2 (Rust) + React + TypeScript + Tailwind v4, SQLite via `tauri-plugin-sql`, `@dnd-kit` for drag-and-drop, and `rrule` for recurrence. `src/app` has the data/theme stores, `src/screens` the two top-level screens, `src/components` the UI, `src-tauri/sidecar/icon-suggester` the Swift on-device summarizer.
+Release builds ship as a universal binary (`npm run tauri build -- --target universal-apple-darwin`) — `scripts/build-sidecar.sh` builds the Swift sidecar for both architectures in one Mach-O so it lands correctly in either arch's app bundle.
+
+Requires macOS 26 (Tahoe) or later for the on-device icon-suggestion sidecar (Apple's Foundation Models framework, Apple Silicon only); everything else runs on Intel Macs too. Built with Tauri v2 (Rust) + React + TypeScript + Tailwind v4, SQLite via `tauri-plugin-sql`, `@dnd-kit` for drag-and-drop, and `rrule` for recurrence. `src/app` has the data/theme stores, `src/screens` the two top-level screens, `src/components` the UI, `src-tauri/sidecar/icon-suggester` the Swift on-device summarizer.
 
 ## License
 

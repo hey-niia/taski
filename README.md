@@ -2,6 +2,8 @@
 
 A native Mac to-do app for routines that reset instead of nagging. Group tasks into named routines that check off and start fresh each day, let anything recur on its own schedule, and keep one-off life-admin in a simple "Unsorted" list — no streaks, no red, no guilt.
 
+**Universal binary** — runs natively on both Apple Silicon and Intel Macs.
+
 <p align="center">
   <img src="taski-cover.png" width="720" alt="Taski showing a Morning routine, a Work routine, and an Evening wind-down routine, each with recurring tasks and schedule chips" />
 </p>

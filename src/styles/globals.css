@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+/*
+  Taski's own identity: warm paper, not the portfolio site's black-and-white.
+  Rounded, soft-contrast, one calm accent — deliberately not red/orange
+  anywhere (no "overdue" alarm color), because this app is not allowed to
+  make anyone feel behind.
+*/
+@theme {
+  --font-sans: "Public Sans", -apple-system, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, serif;
+
+  --color-paper: #faf6f0;
+  --color-paper-raised: #ffffff;
+  --color-ink: #2b2723;
+  --color-ink-soft: #706a62;
+  --color-ink-faint: #b3aca2;
+  --color-line: #e7e0d5;
+  --color-accent: #5f7a5f;
+  --color-accent-soft: #e4ebe1;
+  --color-accent-ink: #ffffff;
+
+  --radius-card: 1rem;
+  --radius-chip: 999px;
+  --radius-control: 0.65rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+/*
+  Alternate themes — same tokens Tailwind's utilities already reference
+  (bg-paper, text-ink, etc.), just redefined per theme. Every palette here
+  stays muted/desaturated on purpose (see RESEARCH.md §1, §2): no neon, no
+  red, one restrained accent each — theming is about which calm palette
+  fits someone, not an excuse to introduce a loud one.
+*/
+:root[data-theme="clay"] {
+  --color-paper: #faf3ec;
+  --color-paper-raised: #ffffff;
+  --color-ink: #2e2420;
+  --color-ink-soft: #7a675d;
+  --color-ink-faint: #b8a89d;
+  --color-line: #ecdfd4;
+  --color-accent: #b5714f;
+  --color-accent-soft: #f1e0d3;
+  --color-accent-ink: #ffffff;
+}
+
+:root[data-theme="sky"] {
+  --color-paper: #f5f6f7;
+  --color-paper-raised: #ffffff;
+  --color-ink: #262b2f;
+  --color-ink-soft: #6b747a;
+  --color-ink-faint: #aeb6bb;
+  --color-line: #dfe3e6;
+  --color-accent: #5b7f9e;
+  --color-accent-soft: #dfe9ef;
+  --color-accent-ink: #ffffff;
+}
+
+/*
+  Homage to new.computer/Dot's landing page — a slow, soft blush-to-cream
+  wash behind the once-per-install Intro screen only. Colors sampled from
+  their product screenshot, not copied as an asset (see design.md). Kept off
+  every working screen on purpose: research on motion and ADHD attention
+  (RESEARCH.md §4) says ambient movement belongs in a one-time welcome
+  moment, not anywhere a task list needs to stay calm.
+*/
+.intro-gradient {
+  background: linear-gradient(120deg, #faf6f0 0%, #ffeef0 35%, #f6cbc8 55%, #faf6f0 85%);
+  background-size: 300% 300%;
+  animation: intro-gradient-drift 22s ease-in-out infinite;
+}
+
+@keyframes intro-gradient-drift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-gradient {
+    animation: none;
+    background-position: 30% 50%;
+  }
+}
+
+:root[data-theme="dusk"] {
+  --color-paper: #201d1a;
+  --color-paper-raised: #29251f;
+  --color-ink: #f1ebe0;
+  --color-ink-soft: #b7ac9e;
+  --color-ink-faint: #766e63;
+  --color-line: #3c352c;
+  --color-accent: #86a687;
+  --color-accent-soft: #33402f;
+  --color-accent-ink: #16200f;
+}

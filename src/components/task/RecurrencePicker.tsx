@@ -44,7 +44,7 @@ export default function RecurrencePicker({
   }
 
   return (
-    <div className="border-line bg-paper-raised rounded-control mt-2 border p-3">
+    <div className="bg-paper-raised rounded-control shadow-card mt-2 p-3">
       <div className="flex flex-wrap gap-1.5">
         {OPTIONS.map((o) => (
           <button

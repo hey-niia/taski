@@ -18,10 +18,11 @@ export default function TaskRow({ task }: { task: Task }) {
 
   return (
     <li ref={setNodeRef} style={style} className="border-line group border-b last:border-b-0">
-      <div className="flex items-start">
-        <DragHandle listeners={listeners} attributes={attributes} />
-        <TaskRowContent task={task} date={todayStr()} />
-      </div>
+      <TaskRowContent
+        task={task}
+        date={todayStr()}
+        dragHandle={<DragHandle listeners={listeners} attributes={attributes} />}
+      />
     </li>
   );
 }

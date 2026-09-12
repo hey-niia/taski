@@ -46,7 +46,7 @@ export default function TaskSchedulePicker({
   }
 
   return (
-    <div className="border-line bg-paper-raised rounded-control mt-2 flex flex-col gap-2 border p-3">
+    <div className="bg-paper-raised rounded-control shadow-card mt-2 flex flex-col gap-2 p-3">
       {!isRecurring && (
         <div className="text-ink-soft flex items-center gap-2 text-sm">
           <span>On</span>

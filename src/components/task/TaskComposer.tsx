@@ -1,4 +1,5 @@
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
+import PlusIcon from "../shared/PlusIcon";
 import RecurrencePicker from "./RecurrencePicker";
 import { useDataStore } from "../../app/dataStore";
 import type { RecurrenceRule } from "../../lib/types";
@@ -11,6 +12,7 @@ export default function TaskComposer({
   placeholder: string;
 }) {
   const addTask = useDataStore((s) => s.addTask);
+  const inputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
   const [recurrence, setRecurrence] = useState<RecurrenceRule | null>(null);
   const [showRecurrence, setShowRecurrence] = useState(false);
@@ -26,9 +28,18 @@ export default function TaskComposer({
   }
 
   return (
-    <div className="pr-4 pl-11">
-      <form onSubmit={submit} className="flex items-center gap-2 py-3">
+    <div className="px-4">
+      <form onSubmit={submit} className="group flex items-center py-2.5">
+        <button
+          type="button"
+          onClick={() => inputRef.current?.focus()}
+          aria-label="Add a task"
+          className="text-ink-faint hover:bg-paper mr-3 flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
+        >
+          <PlusIcon />
+        </button>
         <input
+          ref={inputRef}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder={placeholder}
@@ -37,8 +48,10 @@ export default function TaskComposer({
         <button
           type="button"
           onClick={() => setShowRecurrence((v) => !v)}
-          className={`rounded-chip px-2.5 py-1 text-xs whitespace-nowrap transition-colors ${
-            recurrence ? "bg-accent-soft text-accent" : "text-ink-faint hover:text-ink-soft"
+          className={`rounded-chip mr-1 px-2.5 py-1 text-xs whitespace-nowrap transition-opacity ${
+            recurrence
+              ? "bg-accent-soft text-accent"
+              : "text-ink-faint opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
           }`}
         >
           {recurrence ? "Repeats" : "Repeat"}

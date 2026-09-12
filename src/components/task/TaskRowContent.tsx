@@ -1,4 +1,4 @@
-import { useState, type KeyboardEvent } from "react";
+import { useState, type KeyboardEvent, type ReactNode } from "react";
 import CheckIcon from "../shared/CheckIcon";
 import ClockIcon from "../shared/ClockIcon";
 import RecurrencePicker from "./RecurrencePicker";
@@ -14,7 +14,15 @@ import type { Task } from "../../lib/types";
  * screen (OccurrenceRow, for a specific occurrence date, no drag) — kept as
  * one component so the two screens can't drift apart in behavior or size.
  */
-export default function TaskRowContent({ task, date }: { task: Task; date: string }) {
+export default function TaskRowContent({
+  task,
+  date,
+  dragHandle,
+}: {
+  task: Task;
+  date: string;
+  dragHandle?: ReactNode;
+}) {
   const [editingRecurrence, setEditingRecurrence] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -36,6 +44,19 @@ export default function TaskRowContent({ task, date }: { task: Task; date: strin
   ]
     .filter(Boolean)
     .join(" · ");
+  // Recurring tasks reset on their own schedule by design (RESEARCH.md §5) —
+  // "overdue" only applies to a one-off task whose day has quietly passed
+  // unfinished, which is a time-blindness problem worth surfacing, not a
+  // guilt trip. Marked with the app's one existing accent, never red/alarm.
+  const isOverdue = !task.recurrence && task.scheduledDate < today && !isDone;
+
+  function moveToToday() {
+    setTaskSchedule(task.id, {
+      scheduledDate: today,
+      dueTime: task.dueTime,
+      estimatedMinutes: task.estimatedMinutes,
+    });
+  }
 
   function commitTitle() {
     setIsEditingTitle(false);
@@ -54,7 +75,8 @@ export default function TaskRowContent({ task, date }: { task: Task; date: strin
 
   return (
     <div className="flex-1">
-      <div className="flex items-center py-2.5">
+      <div className="relative flex items-center py-2.5">
+        {dragHandle}
         <button
           type="button"
           onClick={() => toggleCompletion(task.id, date)}
@@ -63,7 +85,7 @@ export default function TaskRowContent({ task, date }: { task: Task; date: strin
           className="mr-3 shrink-0"
         >
           <span
-            className={`rounded-control flex h-6 w-6 items-center justify-center border ${
+            className={`flex h-6 w-6 items-center justify-center rounded-full border ${
               isDone
                 ? "bg-ink border-ink text-paper-raised"
                 : "bg-paper-raised border-ink-faint"
@@ -98,27 +120,49 @@ export default function TaskRowContent({ task, date }: { task: Task; date: strin
           </button>
         )}
 
-        <button
-          type="button"
-          onClick={() => setEditingSchedule((v) => !v)}
-          className={`mr-1 flex items-center gap-1 rounded-full px-2 py-1 text-xs whitespace-nowrap transition-opacity ${
-            hasSchedule
-              ? "text-ink-soft opacity-100"
-              : "text-ink-faint opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
-          }`}
-          aria-label={hasSchedule ? `Edit schedule for "${task.title}"` : `Add a schedule for "${task.title}"`}
-        >
-          <ClockIcon />
-          {hasSchedule && scheduleLabel}
-        </button>
+        {isOverdue ? (
+          <div className="mr-1 flex shrink-0 items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => setEditingSchedule((v) => !v)}
+              className="bg-accent-soft text-accent flex items-center gap-1 rounded-full px-2 py-1 text-xs whitespace-nowrap"
+            >
+              <ClockIcon />
+              {scheduleLabel}
+            </button>
+            <button
+              type="button"
+              onClick={moveToToday}
+              className="text-accent text-xs whitespace-nowrap underline"
+            >
+              Move to today
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => setEditingSchedule((v) => !v)}
+            className={`mr-1 flex items-center gap-1 rounded-full px-2 py-1 text-xs whitespace-nowrap transition-opacity ${
+              hasSchedule
+                ? "text-ink-soft opacity-100"
+                : "text-ink-faint opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
+            }`}
+            aria-label={
+              hasSchedule ? `Edit schedule for "${task.title}"` : `Add a schedule for "${task.title}"`
+            }
+          >
+            <ClockIcon />
+            {hasSchedule && scheduleLabel}
+          </button>
+        )}
 
         <button
           type="button"
           onClick={() => setEditingRecurrence((v) => !v)}
-          className={`rounded-chip mr-1 px-2.5 py-1 text-xs whitespace-nowrap transition-colors ${
+          className={`rounded-chip mr-1 px-2.5 py-1 text-xs whitespace-nowrap transition-opacity ${
             task.recurrence
               ? "bg-accent-soft text-accent"
-              : "text-ink-faint hover:text-ink-soft"
+              : "text-ink-faint opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
           }`}
         >
           {task.recurrence ? describeRecurrence(task.recurrence) : "Repeat"}
@@ -135,7 +179,7 @@ export default function TaskRowContent({ task, date }: { task: Task; date: strin
       </div>
 
       {editingSchedule && (
-        <div className="pb-3 pl-9">
+        <div className="pb-3 pl-[2.25rem]">
           <TaskSchedulePicker
             scheduledDate={task.scheduledDate}
             isRecurring={task.recurrence !== null}
@@ -147,7 +191,7 @@ export default function TaskRowContent({ task, date }: { task: Task; date: strin
       )}
 
       {editingRecurrence && (
-        <div className="pb-3 pl-9">
+        <div className="pb-3 pl-[2.25rem]">
           <RecurrencePicker
             value={task.recurrence}
             onChange={(rule) => setTaskRecurrence(task.id, rule)}

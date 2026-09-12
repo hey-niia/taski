@@ -3,7 +3,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import TaskRow from "./TaskRow";
 import TaskComposer from "./TaskComposer";
-import EmptyState from "../shared/EmptyState";
+import IconPicker from "../shared/IconPicker";
 import type { Task } from "../../lib/types";
 
 function EditableTitle({ title, onRename }: { title: string; onRename: (name: string) => void }) {
@@ -53,69 +53,11 @@ function EditableTitle({ title, onRename }: { title: string; onRename: (name: st
   );
 }
 
-/**
- * Suggested on-device (Apple Intelligence) when a routine is created, but
- * always editable by hand — click it, type or paste a replacement (⌃⌘Space
- * opens the system emoji picker in the field), blur/Enter to save.
- */
-function EditableIcon({
-  icon,
-  onChange,
-}: {
-  icon: string | null;
-  onChange: (icon: string | null) => void;
-}) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [draft, setDraft] = useState(icon ?? "");
-
-  function commit() {
-    setIsEditing(false);
-    onChange(draft.trim() || null);
-  }
-
-  function onKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Enter") e.currentTarget.blur();
-    if (e.key === "Escape") {
-      setDraft(icon ?? "");
-      setIsEditing(false);
-    }
-  }
-
-  if (isEditing) {
-    return (
-      <input
-        autoFocus
-        value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={commit}
-        onKeyDown={onKeyDown}
-        onFocus={(e) => e.currentTarget.select()}
-        className="border-line bg-paper h-7 w-7 shrink-0 rounded-full border text-center outline-none"
-      />
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={() => {
-        setDraft(icon ?? "");
-        setIsEditing(true);
-      }}
-      aria-label={icon ? "Change icon" : "Set an icon"}
-      className="text-ink-faint hover:bg-accent-soft flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-base"
-    >
-      {icon ?? "·"}
-    </button>
-  );
-}
-
 export default function RoutineSection({
   id,
   routineId,
   title,
   icon,
-  emptyHint,
   composerPlaceholder,
   tasks,
   onDelete,
@@ -126,7 +68,6 @@ export default function RoutineSection({
   routineId: string | null;
   title: string;
   icon?: string | null;
-  emptyHint: string;
   composerPlaceholder: string;
   tasks: Task[];
   onDelete?: () => void;
@@ -136,10 +77,10 @@ export default function RoutineSection({
   const { setNodeRef } = useDroppable({ id });
 
   return (
-    <section className="rounded-card bg-paper-raised border-line mb-5 border">
-      <div className="flex items-center justify-between px-4 pt-3.5 pb-1">
+    <section className="rounded-card bg-paper-raised shadow-card mb-5">
+      <div className="group/header flex items-center justify-between px-4 pt-3.5 pb-1">
         <div className="flex items-center gap-1.5">
-          {onIconChange && <EditableIcon icon={icon ?? null} onChange={onIconChange} />}
+          {onIconChange && <IconPicker icon={icon ?? null} onChange={onIconChange} />}
           {onRename ? (
             <EditableTitle title={title} onRename={onRename} />
           ) : (
@@ -150,7 +91,7 @@ export default function RoutineSection({
           <button
             type="button"
             onClick={onDelete}
-            className="text-ink-faint hover:text-ink-soft text-xs"
+            className="text-ink-faint hover:text-ink-soft text-xs opacity-0 transition-opacity group-hover/header:opacity-100 focus-visible:opacity-100"
           >
             Delete routine
           </button>
@@ -159,7 +100,6 @@ export default function RoutineSection({
 
       <ul ref={setNodeRef} className="min-h-2 px-4">
         <SortableContext items={tasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
-          {tasks.length === 0 && <EmptyState>{emptyHint}</EmptyState>}
           {tasks.map((t) => (
             <TaskRow key={t.id} task={t} />
           ))}

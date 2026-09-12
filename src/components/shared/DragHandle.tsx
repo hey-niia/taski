@@ -11,17 +11,14 @@ export default function DragHandle({
     <button
       type="button"
       aria-label="Drag to reorder"
-      className="text-ink-faint hover:text-ink-soft flex h-11 w-8 shrink-0 cursor-grab touch-none items-center justify-center active:cursor-grabbing"
+      className="text-ink-faint hover:text-ink-soft absolute top-1/2 left-[-20px] flex h-8 w-5 -translate-y-1/2 cursor-grab touch-none items-center justify-center opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 active:cursor-grabbing"
       {...attributes}
       {...listeners}
     >
-      <svg width="10" height="16" viewBox="0 0 10 16" fill="none" aria-hidden="true">
-        <circle cx="2" cy="2" r="1.5" fill="currentColor" />
-        <circle cx="8" cy="2" r="1.5" fill="currentColor" />
-        <circle cx="2" cy="8" r="1.5" fill="currentColor" />
-        <circle cx="8" cy="8" r="1.5" fill="currentColor" />
-        <circle cx="2" cy="14" r="1.5" fill="currentColor" />
-        <circle cx="8" cy="14" r="1.5" fill="currentColor" />
+      <svg width="4" height="14" viewBox="0 0 4 14" fill="none" aria-hidden="true">
+        <circle cx="2" cy="2" r="1.2" fill="currentColor" />
+        <circle cx="2" cy="7" r="1.2" fill="currentColor" />
+        <circle cx="2" cy="12" r="1.2" fill="currentColor" />
       </svg>
     </button>
   );

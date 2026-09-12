@@ -36,7 +36,7 @@ export default function ThemePicker() {
             onClick={() => setOpen(false)}
             className="fixed inset-0 z-10 cursor-default"
           />
-          <div className="border-line bg-paper-raised rounded-control absolute top-10 right-0 z-20 flex gap-2 border p-2 shadow-lg">
+          <div className="bg-paper-raised rounded-control shadow-card absolute top-10 right-0 z-20 flex gap-2 p-2">
             {THEMES.map((name) => {
               const meta = THEME_META[name];
               const active = theme === name;

@@ -57,28 +57,25 @@ export default function CalendarScreen() {
       <AppMenu active="calendar" />
 
       <main className="mx-auto max-w-xl px-6 pb-16">
-        <div className="bg-paper-raised border-line mb-2 inline-flex rounded-full border p-1">
-          <button
-            type="button"
-            onClick={() => setView("upcoming")}
-            className={`rounded-full px-4 py-1.5 text-sm transition-colors ${
-              view === "upcoming" ? "bg-accent text-accent-ink" : "text-ink-soft hover:text-ink"
-            }`}
-          >
-            Upcoming
-          </button>
-          <button
-            type="button"
-            onClick={() => setView("month")}
-            className={`rounded-full px-4 py-1.5 text-sm transition-colors ${
-              view === "month" ? "bg-accent text-accent-ink" : "text-ink-soft hover:text-ink"
-            }`}
-          >
-            Month
-          </button>
-        </div>
+        <div className="rounded-card bg-paper-raised shadow-card p-5">
+          <div className="border-line mb-4 flex items-center gap-6 border-b">
+            {(["upcoming", "month"] as const).map((v) => (
+              <button
+                key={v}
+                type="button"
+                onClick={() => setView(v)}
+                className={`relative pb-3 text-sm transition-colors ${
+                  view === v ? "text-ink font-medium" : "text-ink-faint hover:text-ink-soft"
+                }`}
+              >
+                {v === "upcoming" ? "Upcoming" : "Month"}
+                {view === v && (
+                  <span className="bg-accent absolute right-0 -bottom-px left-0 h-0.5 rounded-full" />
+                )}
+              </button>
+            ))}
+          </div>
 
-        <div className="rounded-card bg-paper-raised border-line mt-4 border p-5">
           {view === "upcoming" ? (
             <UpcomingList />
           ) : (

@@ -156,7 +156,6 @@ export default function MainScreen() {
               routineId={routine.id}
               title={routine.name}
               icon={routine.icon}
-              emptyHint="Drag a task here, or add one below."
               composerPlaceholder={`Add to ${routine.name}…`}
               tasks={(containers[routine.id] ?? [])
                 .map((id) => tasksById.get(id))
@@ -170,8 +169,7 @@ export default function MainScreen() {
           <RoutineSection
             id={UNGROUPED}
             routineId={null}
-            title={routines.length > 0 ? "Everything else" : "Your list"}
-            emptyHint="Nothing here yet — add anything on your mind below."
+            title="Unsorted"
             composerPlaceholder="Add a task…"
             tasks={(containers[UNGROUPED] ?? [])
               .map((id) => tasksById.get(id))
@@ -205,7 +203,7 @@ export default function MainScreen() {
 
         <DragOverlay>
           {activeTask && (
-            <ul className="bg-paper-raised border-line rounded-card border shadow-lg">
+            <ul className="bg-paper-raised rounded-card shadow-card">
               <TaskRow task={activeTask} />
             </ul>
           )}
